@@ -7,6 +7,11 @@ export default {
   data() {
     return {};
   },
+  created() {
+    this.$request.get('/login', { name: 'li' }).then(res => {
+      console.log(res)
+    })
+  },
   methods: {
     gohome() {
       this.$router.push("/welcome");
@@ -14,5 +19,4 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>

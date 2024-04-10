@@ -1,5 +1,5 @@
 import axios from 'axios'
-import config from './config'
+import config from '@/config'
 import { ElMessage } from 'element-plus'
 
 
@@ -8,19 +8,17 @@ const NETWORK_ERROR = '网络请求异常，请稍后重试'    //后端错误
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: 'https://some-domain.com/api/',
-  timeout: 1000,
-  headers: { 'X-Custom-Header': 'foobar' }
+  baseURL: config.baerApi,
+  timeout: 8000,
 });
 
 
 // 请求拦截器
 service.interceptors.request.use((req) => {
-  // TO-DO
-  const headers = req.headers;
-  const { token = "" } = storage.getItem('userInfo') || {};
-  if (!headers.Authorization) headers.Authorization = 'Bearer ' + token;
-  return req;
+  const header = req.headers
+
+  if (!header.Authorization) header.Authorization = 'Li'
+  return req
 })
 
 // 响应拦截器
@@ -44,14 +42,37 @@ service.interceptors.response.use((res) => {
 
 // 封装核心请求函数
 function request(options) {
-  options.method = options.method || 'get'  //如果没有传入请求方式，默认为get
-  if (options.method.toLowerCase() === 'get') {   //如果请求方式是get，那么给params赋值
+  //如果没有传入请求方式，默认为get
+  options.method = options.method || 'get'
+  //如果请求方式是get，那么给params赋值
+  if (options.method.toLowerCase() === 'get') {
     options.params = options.data;
   }
+
+
+
+  // 重点
+  if (config.env === 'prod') {
+    service.defaults.baseURL = config.baseApi
+  } else {
+    service.defaults.baseURL = config.mockApi ? config.mockApi : config.baseApi
+  }
+
 
   return service(options)
 }
 
+
+['get', 'post', 'put', 'delete', 'patch'].forEach(item => {
+  request[item] = (url, data, options) => {
+    return request({
+      url,
+      data,
+      method: item,
+      ...options
+    })
+  }
+})
 
 
 export default request

@@ -11,7 +11,7 @@ const routes = [
             title: '首页'
         },
         component: Home,
-        redirect: '/welconme',
+        redirect: '/welcome',
         children: [
             {
                 path: '/welcome',
