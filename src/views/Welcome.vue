@@ -1,6 +1,8 @@
 <template>
-  <div>登录页</div>
-  <button @click="goLogin()">到登录页</button>
+  <div>
+    <div>登录页</div>
+    <button @click="goLogin()">到登录页</button>
+  </div>
 </template>
 <script>
 export default {
